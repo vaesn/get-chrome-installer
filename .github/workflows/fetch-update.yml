@@ -1,4 +1,4 @@
-name: Check Update and Upload Release
+name: fetch-update
 
 on:
   push:
@@ -6,10 +6,10 @@ on:
     paths:
       - "fetch.py"
       - "download.py"
-      - ".github/workflows/task.yml"
+      - ".github/workflows/fetch-update.yml"
   workflow_dispatch:
   schedule:
-    - cron: '0 */1 * * *'
+    - cron: "36 */3 * * 2-5"
 
 permissions:
   contents: write
@@ -19,16 +19,16 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  release:
+  fetch-update:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Setup Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v7
         with:
           python-version: "3.11"
 
@@ -37,7 +37,6 @@ jobs:
 
       - name: Fetch latest versions
         run: python fetch.py
-        # fetch.py 写入 GITHUB_ENV.updated = true / false
 
       - name: Download installers
         if: env.updated == 'true'
@@ -54,27 +53,27 @@ jobs:
             echo "installers_exist=false" >> "$GITHUB_ENV"
           fi
 
-      - name: Commit README.md & data.json
+      - name: Commit readme.md & data.json
         if: env.installers_exist == 'true'
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add README.md data.json
+          git add readme.md data.json
           if git diff --cached --quiet; then
             echo "nothing to commit"
           else
-            git commit -m "chore: auto update README.md & data.json"
+            git commit -m "chore: auto update readme.md & data.json"
             git push origin main
           fi
 
-      - name: Remove old releases
+      - name: Clean old releases
         if: env.installers_exist == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          # 删除所有旧 Release 及其 tag，确保仓库始终只有一个最新 Release
-          gh release list --json tagName --jq '.[].tagName' 2>/dev/null \
-            | xargs -r -I{} gh release delete "{}" --yes --cleanup-tag || true
+          for tag in $(gh release list --json tagName --jq '.[].tagName' 2>/dev/null); do
+            gh release delete "$tag" --yes --cleanup-tag || true
+          done
 
       - name: Create latest release
         if: env.installers_exist == 'true'
@@ -84,9 +83,27 @@ jobs:
           VERSION=$(python -c "import json;print(json.load(open('data.json'))['win_stable_x64']['version'])")
           gh release create latest \
             --title "Chrome ${VERSION} Stable" \
-            --notes-file README.md
+            --notes-file readme.md
           shopt -s nullglob
           files=( *.exe *.dmg )
           if [ ${#files[@]} -gt 0 ]; then
             gh release upload latest "${files[@]}" --clobber
           fi
+
+      - name: Delete past completed runs of this workflow
+        if: env.installers_exist == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          gh run list \
+            --repo "${{ github.repository }}" \
+            --workflow "${{ github.workflow }}" \
+            --limit 100 \
+            --json databaseId,status \
+            --jq '.[] | select(.status=="completed") | .databaseId' | while read -r run_id; do
+              if [ -z "$run_id" ]; then continue; fi
+              if [ "$run_id" = "${{ github.run_id }}" ]; then continue; fi
+              gh run delete "$run_id" --repo "${{ github.repository }}" || true
+            done
