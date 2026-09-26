@@ -1,0 +1,92 @@
+name: Check Update and Upload Release
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "fetch.py"
+      - "download.py"
+      - ".github/workflows/task.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */1 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: chrome-installer
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: python -m pip install --quiet --disable-pip-version-check requests
+
+      - name: Fetch latest versions
+        run: python fetch.py
+        # fetch.py 写入 GITHUB_ENV.updated = true / false
+
+      - name: Download installers
+        if: env.updated == 'true'
+        run: python download.py --arch win_stable_x64 win_stable_arm64 mac_stable_x64
+
+      - name: Check installer files
+        if: env.updated == 'true'
+        run: |
+          shopt -s nullglob
+          files=( *.exe *.dmg )
+          if [ ${#files[@]} -gt 0 ]; then
+            echo "installers_exist=true" >> "$GITHUB_ENV"
+          else
+            echo "installers_exist=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Commit README.md & data.json
+        if: env.installers_exist == 'true'
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md data.json
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+          else
+            git commit -m "chore: auto update README.md & data.json"
+            git push origin main
+          fi
+
+      - name: Remove old releases
+        if: env.installers_exist == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # 删除所有旧 Release 及其 tag，确保仓库始终只有一个最新 Release
+          gh release list --json tagName --jq '.[].tagName' 2>/dev/null \
+            | xargs -r -I{} gh release delete "{}" --yes --cleanup-tag || true
+
+      - name: Create latest release
+        if: env.installers_exist == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(python -c "import json;print(json.load(open('data.json'))['win_stable_x64']['version'])")
+          gh release create latest \
+            --title "Chrome ${VERSION} Stable" \
+            --notes-file README.md
+          shopt -s nullglob
+          files=( *.exe *.dmg )
+          if [ ${#files[@]} -gt 0 ]; then
+            gh release upload latest "${files[@]}" --clobber
+          fi
