@@ -54,16 +54,16 @@ jobs:
             echo "installers_exist=false" >> "$GITHUB_ENV"
           fi
 
-      - name: Commit readme.md & data.json
+      - name: Commit README.md & data.json
         if: env.installers_exist == 'true'
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add readme.md data.json
+          git add README.md data.json
           if git diff --cached --quiet; then
             echo "nothing to commit"
           else
-            git commit -m "chore: auto update readme.md & data.json"
+            git commit -m "chore: auto update README.md & data.json"
             git push origin main
           fi
 
@@ -84,7 +84,7 @@ jobs:
           VERSION=$(python -c "import json;print(json.load(open('data.json'))['win_stable_x64']['version'])")
           gh release create latest \
             --title "Chrome ${VERSION} Stable" \
-            --notes-file readme.md
+            --notes-file README.md
           shopt -s nullglob
           files=( *.exe *.dmg )
           if [ ${#files[@]} -gt 0 ]; then
