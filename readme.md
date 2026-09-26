@@ -30,6 +30,6 @@ f6aabc920ea976149b840fbf81afae90d995529088039553aec996cff759076b  arm64_154.0.80
 
 ## Notes
 
-- 安装包未加壳，可直接使用 7-Zip 解压或双击安装。
+- 使用 7-Zip 解压并配合[chrome_plus](https://github.com/Bush2021/chrome_plus)以实现便携化使用。
 - 下载后请用上方 SHA-256 校验文件完整性（`sha256sum -c`）。
 - Tag 固定为 `latest`，每次有版本更新时旧 Release 会被自动替换。

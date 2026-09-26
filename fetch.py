@@ -207,7 +207,7 @@ def build_readme(results, path="README.md"):
         info = results.get(key) or {}
         if info.get("version"):
             google_url = pick_google_direct(info["urls"])
-            mirror_url = f"https://github.com/{slug}/releases/latest/download/{asset_name(key, info)}"
+            mirror_url = f"https://v4.gh-proxy.org/https://github.com/{slug}/releases/latest/download/{asset_name(key, info)}"
             lines.append(
                 f"| **{DISPLAY_NAME[key]}** | [dl.google.com]({google_url}) | [GitHub Release]({mirror_url}) |"
             )
@@ -223,7 +223,7 @@ def build_readme(results, path="README.md"):
     lines.append("")
     lines.append("## Notes")
     lines.append("")
-    lines.append("- 直接使用 7-Zip 解压,配合chrome++使用。")
+    lines.append("- 使用 7-Zip 解压并配合[chrome_plus](https://github.com/Bush2021/chrome_plus)以实现便携化使用。")
     lines.append("- Tag 固定为 `latest`，每次版本更新时旧 Release 会被自动替换，仓库始终只保留一个 Release。")
     lines.append("- `data.json` 保存了全部 13 个渠道/架构的原始响应（Stable / Beta / Dev / Canary × win x86/x64/arm64 / mac x64）")
     lines.append("")
