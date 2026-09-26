@@ -173,7 +173,7 @@ def repo_slug():
     return os.environ.get("GITHUB_REPOSITORY", "OWNER/REPO")
 
 
-def build_readme(results, path="readme.md"):
+def build_readme(results, path="RADME.md"):
     slug = repo_slug()
     lines = []
     lines.append("# Google Chrome Offline Installers (Auto Update)")
@@ -202,7 +202,7 @@ def build_readme(results, path="readme.md"):
         info = results.get(key) or {}
         if info.get("version"):
             google_url = pick_google_direct(info["urls"])
-            mirror_url = f"https://github.com/{slug}/releases/latest/download/{asset_name(key, info)}"
+            mirror_url = f"https://v4.gh-proxy.org/https://github.com/{slug}/releases/latest/download/{asset_name(key, info)}"
             lines.append(
                 f"| **{DISPLAY_NAME[key]}** | [dl.google.com]({google_url}) | [GitHub Release]({mirror_url}) |"
             )
@@ -244,7 +244,7 @@ def main():
         with open("data.json", "w", encoding="utf-8") as f:
             json.dump(new_results, f, indent=2, ensure_ascii=False)
         set_github_env("updated", "true")
-        print("[fetch] version changed, data.json & readme.md updated")
+        print("[fetch] version changed, data.json & README.md updated")
     else:
         set_github_env("updated", "false")
         print("[fetch] no version change, skip rewriting")
