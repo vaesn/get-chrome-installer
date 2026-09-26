@@ -1,3 +1,4 @@
+
 import json
 import os
 import sys
@@ -19,6 +20,7 @@ MAC_CANARY_APPID = "com.google.Chrome.Canary"
 
 MAC_OS_VERSION = "46.0.2490.86"
 
+# 13 条查询目标：全部写入 data.json（原始响应结构）
 TARGETS = {
     # === Stable ===
     "win_stable_x64":   {"os": "win", "os_version": "10.0", "arch": "x64",
@@ -110,6 +112,7 @@ def fetch_all():
 
 
 def pick_google_direct(urls):
+    """优先返回 https://dl.google.com 开头的直链，其次任意 https google.com，最后第一个"""
     for u in urls:
         if u.startswith("https://dl.google.com/"):
             return u
@@ -120,6 +123,8 @@ def pick_google_direct(urls):
 
 
 def asset_name(key, entry):
+    """生成 Release 资产名：{arch_id}_{原始文件名}
+    必须与 download.py 中的 asset_name() 保持完全一致"""
     url = pick_google_direct(entry.get("urls") or [])
     if not url:
         return ""
@@ -173,7 +178,7 @@ def repo_slug():
     return os.environ.get("GITHUB_REPOSITORY", "OWNER/REPO")
 
 
-def build_readme(results, path="RADME.md"):
+def build_readme(results, path="README.md"):
     slug = repo_slug()
     lines = []
     lines.append("# Google Chrome Offline Installers (Auto Update)")
@@ -202,7 +207,7 @@ def build_readme(results, path="RADME.md"):
         info = results.get(key) or {}
         if info.get("version"):
             google_url = pick_google_direct(info["urls"])
-            mirror_url = f"https://v4.gh-proxy.org/https://github.com/{slug}/releases/latest/download/{asset_name(key, info)}"
+            mirror_url = f"https://github.com/{slug}/releases/latest/download/{asset_name(key, info)}"
             lines.append(
                 f"| **{DISPLAY_NAME[key]}** | [dl.google.com]({google_url}) | [GitHub Release]({mirror_url}) |"
             )
@@ -218,7 +223,7 @@ def build_readme(results, path="RADME.md"):
     lines.append("")
     lines.append("## Notes")
     lines.append("")
-    lines.append("- 使用 7-Zip 解压后配合chrome++便携化使用。")
+    lines.append("- 直接使用 7-Zip 解压,配合chrome++使用。")
     lines.append("- Tag 固定为 `latest`，每次版本更新时旧 Release 会被自动替换，仓库始终只保留一个 Release。")
     lines.append("- `data.json` 保存了全部 13 个渠道/架构的原始响应（Stable / Beta / Dev / Canary × win x86/x64/arm64 / mac x64）")
     lines.append("")
