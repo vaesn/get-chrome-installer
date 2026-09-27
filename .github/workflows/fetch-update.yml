@@ -92,7 +92,7 @@ jobs:
           fi
 
       - name: Delete past completed runs of this workflow
-        if: env.installers_exist == 'true'
+        if: ${{ always() }}
         continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
