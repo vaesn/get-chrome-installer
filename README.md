@@ -30,6 +30,6 @@ f6aabc920ea976149b840fbf81afae90d995529088039553aec996cff759076b  arm64_154.0.80
 
 ## Notes
 
-- 使用 7-Zip 解压并配合[chrome_plus](https://github.com/Bush2021/chrome_plus)以实现便携化使用。
+- 使用 7-Zip 解压并配合chrome_plus以实现便携化使用。
 - Tag 固定为 `latest`，每次版本更新时旧 Release 会被自动替换，仓库始终只保留一个 Release。
 - `data.json` 保存了全部 13 个渠道/架构的原始响应（Stable / Beta / Dev / Canary × win x86/x64/arm64 / mac x64）
