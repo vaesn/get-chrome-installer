@@ -8,24 +8,24 @@
 
 | Platform | Version | Size | SHA-256 (前 16 位) |
 | -------- | ------- | ---- | ------------------- |
-| **Windows x64** | `154.0.8037.98` | 495.33 MB | `2d5f2073185cdf8e…` |
-| **Windows ARM64** | `154.0.8037.98` | 418.02 MB | `dd9945e3271a08f6…` |
-| **macOS x64** | `154.0.8037.98` | 261.05 MB | `7f85cdec42632b48…` |
+| **Windows x64** | `155.0.8059.40` | 498.41 MB | `c43d400e13d421f4…` |
+| **Windows ARM64** | `155.0.8059.40` | 422.8 MB | `f586ddb44ced63c6…` |
+| **macOS x64** | `155.0.8059.40` | 263.24 MB | `004c039b5c0c7be3…` |
 
 ## Downloads
 
 | Platform | Google Direct | GitHub Release Mirror |
 | -------- | ------------- | ---------------------- |
-| **Windows x64** | [dl.google.com](https://dl.google.com/release2/chrome/ac3stf7x6z62hvwmphhro6dpbhpq_154.0.8037.98/154.0.8037.98_chrome_installer_uncompressed.exe) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_154.0.8037.98_chrome_installer_uncompressed.exe) |
-| **Windows ARM64** | [dl.google.com](https://dl.google.com/release2/chrome/adlncrhrlmip6efjsmh5j3rnq6vq_154.0.8037.98/154.0.8037.98_chrome_installer_uncompressed.exe) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/arm64_154.0.8037.98_chrome_installer_uncompressed.exe) |
-| **macOS x64** | [dl.google.com](https://dl.google.com/release2/chrome/oesfoc5zcpr4zxi27ozbzxre4i_154.0.8037.98/GoogleChrome-154.0.8037.98.dmg) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_GoogleChrome-154.0.8037.98.dmg) |
+| **Windows x64** | [dl.google.com](https://dl.google.com/release2/chrome/adeicfs34nqhzmry2l2sdlpo7l2q_155.0.8059.40/155.0.8059.40_chrome_installer_uncompressed.exe) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_155.0.8059.40_chrome_installer_uncompressed.exe) |
+| **Windows ARM64** | [dl.google.com](https://dl.google.com/release2/chrome/acebtw7pmgyxqsd5b653vx6idjoa_155.0.8059.40/155.0.8059.40_chrome_installer_uncompressed.exe) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/arm64_155.0.8059.40_chrome_installer_uncompressed.exe) |
+| **macOS x64** | [dl.google.com](https://dl.google.com/release2/chrome/lr7fpw3uxyyx5tnf7oone26c6m_155.0.8059.40/GoogleChrome-155.0.8059.40.dmg) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_GoogleChrome-155.0.8059.40.dmg) |
 
 ## SHA-256 校验
 
 ```
-2d5f2073185cdf8e72bd70b19970bcb2e1ade19a85d68b6be2a3fe672816941d  x64_154.0.8037.98_chrome_installer_uncompressed.exe
-dd9945e3271a08f6cef1b67169fcf906ac3dee37ee027f669d177e8b508a5781  arm64_154.0.8037.98_chrome_installer_uncompressed.exe
-7f85cdec42632b482b2afc5fe8ee04bcf730082cec1328c0041d788632f57542  x64_GoogleChrome-154.0.8037.98.dmg
+c43d400e13d421f43ea3bba7e502004f2fe428e5679b32975e3a343bc1d97f06  x64_155.0.8059.40_chrome_installer_uncompressed.exe
+f586ddb44ced63c62759a9bfd44fa040c9bd9fa952cad56d688d6b25b2b75f24  arm64_155.0.8059.40_chrome_installer_uncompressed.exe
+004c039b5c0c7be3d61fa5254e2b095c3725378ae199c653f324b70f4aed894c  x64_GoogleChrome-155.0.8059.40.dmg
 ```
 
 ## Notes
