@@ -14,11 +14,72 @@
 
 ## SHA-256 校验
 
+| Platform | 文件名 | SHA-256 |
+| -------- | ------ | ------- |
+| **Windows x64** | `x64_155.0.8059.85_chrome_installer_uncompressed.exe` | `2a9b18526096b614fbfda4324280fc69316e42dcb0668301f2cd8a4524054664` |
+| **Windows ARM64** | `arm64_155.0.8059.85_chrome_installer_uncompressed.exe` | `c09c2d05dd835f7005e67159f82ce20ca011705fb4db65c28d547ac13b2c0dd6` |
+| **macOS x64** | `x64_GoogleChrome-155.0.8059.85.dmg` | `2adfb136bea19ea9f6386a3b408aae4b81b5a3c0955fc3a3093b6ae184c527e7` |
+
+> 💡 展开下方对应平台，点击代码块右上角的复制按钮即可复制完整哈希。
+
+<details>
+<summary><strong>验证方法（点击展开）</strong></summary>
+
+### Windows x64
+
+文件名：`x64_155.0.8059.85_chrome_installer_uncompressed.exe`
+
+```text
+2a9b18526096b614fbfda4324280fc69316e42dcb0668301f2cd8a4524054664
 ```
-2a9b18526096b614fbfda4324280fc69316e42dcb0668301f2cd8a4524054664  x64_155.0.8059.85_chrome_installer_uncompressed.exe
-c09c2d05dd835f7005e67159f82ce20ca011705fb4db65c28d547ac13b2c0dd6  arm64_155.0.8059.85_chrome_installer_uncompressed.exe
-2adfb136bea19ea9f6386a3b408aae4b81b5a3c0955fc3a3093b6ae184c527e7  x64_GoogleChrome-155.0.8059.85.dmg
+
+PowerShell（在文件所在目录执行）：
+
+```powershell
+Get-FileHash .\x64_155.0.8059.85_chrome_installer_uncompressed.exe -Algorithm SHA256
 ```
+
+CMD（可选）：
+
+```bat
+certutil -hashfile x64_155.0.8059.85_chrome_installer_uncompressed.exe SHA256
+```
+
+### Windows ARM64
+
+文件名：`arm64_155.0.8059.85_chrome_installer_uncompressed.exe`
+
+```text
+c09c2d05dd835f7005e67159f82ce20ca011705fb4db65c28d547ac13b2c0dd6
+```
+
+PowerShell（在文件所在目录执行）：
+
+```powershell
+Get-FileHash .\arm64_155.0.8059.85_chrome_installer_uncompressed.exe -Algorithm SHA256
+```
+
+CMD（可选）：
+
+```bat
+certutil -hashfile arm64_155.0.8059.85_chrome_installer_uncompressed.exe SHA256
+```
+
+### macOS x64
+
+文件名：`x64_GoogleChrome-155.0.8059.85.dmg`
+
+```text
+2adfb136bea19ea9f6386a3b408aae4b81b5a3c0955fc3a3093b6ae184c527e7
+```
+
+macOS / Linux：
+
+```bash
+shasum -a 256 x64_GoogleChrome-155.0.8059.85.dmg
+```
+
+</details>
 
 ## Notes
 
