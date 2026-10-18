@@ -177,14 +177,57 @@ def build_readme(results, path="README.md"):
                 f"| [GitHub Release]({mirror_url}) |"
             )
     lines.append("")
+    # ===== SHA-256 校验（新版：表格总览 + 折叠的逐平台验证方法）=====
     lines.append("## SHA-256 校验")
     lines.append("")
-    lines.append("```")
+    lines.append("| Platform | 文件名 | SHA-256 |")
+    lines.append("| -------- | ------ | ------- |")
     for key in DOWNLOAD_TARGETS:
         info = results.get(key) or {}
         if info.get("version"):
-            lines.append(f"{info['sha256']}  {asset_name(key, info)}")
-    lines.append("```")
+            lines.append(
+                f"| **{DISPLAY_NAME[key]}** | `{asset_name(key, info)}` | `{info['sha256'] or 'N/A'}` |"
+            )
+    lines.append("")
+    lines.append("> 💡 展开下方对应平台，点击代码块右上角的复制按钮即可复制完整哈希。")
+    lines.append("")
+    lines.append("<details>")
+    lines.append("<summary><strong>验证方法（点击展开）</strong></summary>")
+    lines.append("")
+    for key in DOWNLOAD_TARGETS:
+        info = results.get(key) or {}
+        if not info.get("version"):
+            continue
+        fname = asset_name(key, info)
+        lines.append(f"### {DISPLAY_NAME[key]}")
+        lines.append("")
+        lines.append(f"文件名：`{fname}`")
+        lines.append("")
+        lines.append("```text")
+        lines.append(info["sha256"] or "N/A")
+        lines.append("```")
+        if key.startswith("win"):
+            lines.append("")
+            lines.append("PowerShell（在文件所在目录执行）：")
+            lines.append("")
+            lines.append("```powershell")
+            lines.append(f"Get-FileHash .\\{fname} -Algorithm SHA256")
+            lines.append("```")
+            lines.append("")
+            lines.append("CMD（可选）：")
+            lines.append("")
+            lines.append("```bat")
+            lines.append(f"certutil -hashfile {fname} SHA256")
+            lines.append("```")
+        else:
+            lines.append("")
+            lines.append("macOS / Linux：")
+            lines.append("")
+            lines.append("```bash")
+            lines.append(f"shasum -a 256 {fname}")
+            lines.append("```")
+        lines.append("")
+    lines.append("</details>")
     lines.append("")
     lines.append("## Notes")
     lines.append("")
