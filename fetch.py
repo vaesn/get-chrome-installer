@@ -161,38 +161,27 @@ def build_readme(results, path="README.md"):
     lines.append("## Latest Stable")
     lines.append("")
     lines.append("| Platform | Version | Size | SHA-256 | Google Direct | GitHub Release Mirror |")
-    lines.append("| -------- | ------- | ---- | ------------------- | ------------- | --------------------- |")
+    lines.append("| -------- | ------- | ---- | ------- | ------------- | --------------------- |")
     for key in DOWNLOAD_TARGETS:
         info = results.get(key) or {}
         if info.get("version"):
-            short_sha = (info.get("sha256") or "")[:16] + "…"
             google_url = pick_google_direct(info["urls"])
             mirror_url = f"https://v4.gh-proxy.org/https://github.com/{slug}/releases/latest/download/{asset_name(key, info)}"
             lines.append(
                 f"| **{DISPLAY_NAME[key]}** "
                 f"| `{info['version']}` "
                 f"| {humansize(info['size'])} "
-                f"| `{short_sha}` "
+                f"| `{info['sha256']}` "
                 f"| [dl.google.com]({google_url}) "
                 f"| [GitHub Release]({mirror_url}) |"
             )
     lines.append("")
-    # ===== SHA-256 校验（新版：表格总览 + 折叠的逐平台验证方法）=====
-    lines.append("## SHA-256 校验")
+    lines.append("## 校验方法")
     lines.append("")
-    lines.append("| Platform | 文件名 | SHA-256 |")
-    lines.append("| -------- | ------ | ------- |")
-    for key in DOWNLOAD_TARGETS:
-        info = results.get(key) or {}
-        if info.get("version"):
-            lines.append(
-                f"| **{DISPLAY_NAME[key]}** | `{asset_name(key, info)}` | `{info['sha256'] or 'N/A'}` |"
-            )
-    lines.append("")
-    lines.append("> 💡 展开下方对应平台，点击代码块右上角的复制按钮即可复制完整哈希。")
+    lines.append("安装包的 SHA-256 见上表，下载后与本地计算结果比对即可。")
     lines.append("")
     lines.append("<details>")
-    lines.append("<summary><strong>验证方法（点击展开）</strong></summary>")
+    lines.append("<summary><strong>命令行校验（点击展开）</strong></summary>")
     lines.append("")
     for key in DOWNLOAD_TARGETS:
         info = results.get(key) or {}
@@ -201,13 +190,7 @@ def build_readme(results, path="README.md"):
         fname = asset_name(key, info)
         lines.append(f"### {DISPLAY_NAME[key]}")
         lines.append("")
-        lines.append(f"文件名：`{fname}`")
-        lines.append("")
-        lines.append("```text")
-        lines.append(info["sha256"] or "N/A")
-        lines.append("```")
         if key.startswith("win"):
-            lines.append("")
             lines.append("PowerShell（在文件所在目录执行）：")
             lines.append("")
             lines.append("```powershell")
@@ -220,7 +203,6 @@ def build_readme(results, path="README.md"):
             lines.append(f"certutil -hashfile {fname} SHA256")
             lines.append("```")
         else:
-            lines.append("")
             lines.append("macOS / Linux：")
             lines.append("")
             lines.append("```bash")
@@ -236,6 +218,7 @@ def build_readme(results, path="README.md"):
     lines.append("- `data.json` 保存了全部 13 个渠道/架构的原始响应（Stable / Beta / Dev / Canary × win x86/x64/arm64 / mac x64）")
     lines.append("")
     with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
         f.write("\n".join(lines))
 def main():
     new_results = fetch_all()
