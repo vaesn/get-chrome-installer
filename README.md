@@ -8,9 +8,9 @@
 
 | Platform | Version | Size | Google Direct | GitHub Release Mirror | SHA-256 |
 | -------- | ------- | ---- | ------------- | --------------------- | ------- |
-| **Windows x64** | `156.0.8078.80` | 500.97 MB | [dl.google.com](https://dl.google.com/release2/chrome/aczq54y7kwp55hzkkdtm7qgz2x6a_156.0.8078.80/156.0.8078.80_chrome_installer_uncompressed.exe) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_156.0.8078.80_chrome_installer_uncompressed.exe) | <details><summary><code>43cca215206b634b…</code></summary><code>43cca215206b634b89d226ed71522c7f58c5430b8559b92e782dd7bd77add7cc</code></details> |
-| **Windows ARM64** | `156.0.8078.80` | 426.87 MB | [dl.google.com](https://dl.google.com/release2/chrome/acpvmvph6azmnleo3any6quriw6a_156.0.8078.80/156.0.8078.80_chrome_installer_uncompressed.exe) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/arm64_156.0.8078.80_chrome_installer_uncompressed.exe) | <details><summary><code>f7a5713fcc6594e0…</code></summary><code>f7a5713fcc6594e006b0a73730bb1f846d09f92834cc0397ca692b61cb18461d</code></details> |
-| **macOS x64** | `156.0.8078.80` | 266.08 MB | [dl.google.com](https://dl.google.com/release2/chrome/hmx6fwnspbytmrtkulm2cctvey_156.0.8078.80/GoogleChrome-156.0.8078.80.dmg) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_GoogleChrome-156.0.8078.80.dmg) | <details><summary><code>f805340c73f5e569…</code></summary><code>f805340c73f5e569124d0fd5e0c0b9a3eba81b76016198ea7703b349c0006d9a</code></details> |
+| **Windows x64** | `157.0.8103.39` | 505.67 MB | [dl.google.com](https://dl.google.com/release2/chrome/lzz46e6auim6sx75xrn7xp5hza_157.0.8103.39/157.0.8103.39_chrome_installer_uncompressed.exe) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_157.0.8103.39_chrome_installer_uncompressed.exe) | <details><summary><code>389b9e21de9a520a…</code></summary><code>389b9e21de9a520a6e24ba807ee8760409ccc837457bbcc460d2fdce0d5e8df5</code></details> |
+| **Windows ARM64** | `157.0.8103.39` | 433.2 MB | [dl.google.com](https://dl.google.com/release2/chrome/b5nkgc5ojnyxf6fup2lbg7wu2i_157.0.8103.39/157.0.8103.39_chrome_installer_uncompressed.exe) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/arm64_157.0.8103.39_chrome_installer_uncompressed.exe) | <details><summary><code>b78eb6f41328178f…</code></summary><code>b78eb6f41328178fe5051959daf3a4193b10721e89bb7932228911a9f4b36fca</code></details> |
+| **macOS x64** | `157.0.8103.39` | 269.53 MB | [dl.google.com](https://dl.google.com/release2/chrome/lj4mgpdwdwirchvgzajx46etji_157.0.8103.39/GoogleChrome-157.0.8103.39.dmg) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_GoogleChrome-157.0.8103.39.dmg) | <details><summary><code>c4cd9a7c35b60ae0…</code></summary><code>c4cd9a7c35b60ae05ddb7f1ec3fce4911636e1bad0cacb99e1a2ea1ff2013105</code></details> |
 
 ## 校验方法
 
@@ -21,56 +21,56 @@
 
 ### Windows x64
 
-文件名：`x64_156.0.8078.80_chrome_installer_uncompressed.exe`
+文件名：`x64_157.0.8103.39_chrome_installer_uncompressed.exe`
 
 ```text
-43cca215206b634b89d226ed71522c7f58c5430b8559b92e782dd7bd77add7cc
+389b9e21de9a520a6e24ba807ee8760409ccc837457bbcc460d2fdce0d5e8df5
 ```
 
 PowerShell（在文件所在目录执行）：
 
 ```powershell
-Get-FileHash .\x64_156.0.8078.80_chrome_installer_uncompressed.exe -Algorithm SHA256
+Get-FileHash .\x64_157.0.8103.39_chrome_installer_uncompressed.exe -Algorithm SHA256
 ```
 
 CMD（可选）：
 
 ```bat
-certutil -hashfile x64_156.0.8078.80_chrome_installer_uncompressed.exe SHA256
+certutil -hashfile x64_157.0.8103.39_chrome_installer_uncompressed.exe SHA256
 ```
 
 ### Windows ARM64
 
-文件名：`arm64_156.0.8078.80_chrome_installer_uncompressed.exe`
+文件名：`arm64_157.0.8103.39_chrome_installer_uncompressed.exe`
 
 ```text
-f7a5713fcc6594e006b0a73730bb1f846d09f92834cc0397ca692b61cb18461d
+b78eb6f41328178fe5051959daf3a4193b10721e89bb7932228911a9f4b36fca
 ```
 
 PowerShell（在文件所在目录执行）：
 
 ```powershell
-Get-FileHash .\arm64_156.0.8078.80_chrome_installer_uncompressed.exe -Algorithm SHA256
+Get-FileHash .\arm64_157.0.8103.39_chrome_installer_uncompressed.exe -Algorithm SHA256
 ```
 
 CMD（可选）：
 
 ```bat
-certutil -hashfile arm64_156.0.8078.80_chrome_installer_uncompressed.exe SHA256
+certutil -hashfile arm64_157.0.8103.39_chrome_installer_uncompressed.exe SHA256
 ```
 
 ### macOS x64
 
-文件名：`x64_GoogleChrome-156.0.8078.80.dmg`
+文件名：`x64_GoogleChrome-157.0.8103.39.dmg`
 
 ```text
-f805340c73f5e569124d0fd5e0c0b9a3eba81b76016198ea7703b349c0006d9a
+c4cd9a7c35b60ae05ddb7f1ec3fce4911636e1bad0cacb99e1a2ea1ff2013105
 ```
 
 macOS / Linux：
 
 ```bash
-shasum -a 256 x64_GoogleChrome-156.0.8078.80.dmg
+shasum -a 256 x64_GoogleChrome-157.0.8103.39.dmg
 ```
 
 </details>
