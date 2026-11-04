@@ -1,0 +1,110 @@
+name: fetch-update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "fetch.py"
+      - "download.py"
+      - ".github/workflows/fetch-update.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "36 */3 * * 2-5"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: chrome-installer
+  cancel-in-progress: false
+
+jobs:
+  fetch-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: python -m pip install --quiet --disable-pip-version-check requests
+
+      - name: Fetch latest versions
+        run: python fetch.py
+
+      - name: Download installers
+        if: env.updated == 'true'
+        run: python download.py --arch win_stable_x64 win_stable_arm64 mac_stable_x64
+
+      - name: Check installer files
+        if: env.updated == 'true'
+        run: |
+          shopt -s nullglob
+          files=( *.exe *.dmg )
+          if [ ${#files[@]} -gt 0 ]; then
+            echo "installers_exist=true" >> "$GITHUB_ENV"
+          else
+            echo "installers_exist=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Commit README.md & data.json
+        if: env.installers_exist == 'true'
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md data.json
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+          else
+            git commit -m "chore: auto update README.md & data.json"
+            git push origin main
+          fi
+
+      - name: Clean old releases
+        if: env.installers_exist == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for tag in $(gh release list --json tagName --jq '.[].tagName' 2>/dev/null); do
+            gh release delete "$tag" --yes --cleanup-tag || true
+          done
+
+      - name: Create latest release
+        if: env.installers_exist == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(python -c "import json;print(json.load(open('data.json'))['win_stable_x64']['version'])")
+          gh release create latest \
+            --title "Chrome ${VERSION} Stable" \
+            --notes-file README.md
+          shopt -s nullglob
+          files=( *.exe *.dmg )
+          if [ ${#files[@]} -gt 0 ]; then
+            gh release upload latest "${files[@]}" --clobber
+          fi
+
+      - name: Delete past completed runs of this workflow
+        if: ${{ always() }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          gh run list \
+            --repo "${{ github.repository }}" \
+            --workflow "${{ github.workflow }}" \
+            --limit 100 \
+            --json databaseId,status \
+            --jq '.[] | select(.status=="completed") | .databaseId' | while read -r run_id; do
+              if [ -z "$run_id" ]; then continue; fi
+              if [ "$run_id" = "${{ github.run_id }}" ]; then continue; fi
+              gh run delete "$run_id" --repo "${{ github.repository }}" || true
+            done
