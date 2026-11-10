@@ -1,0 +1,250 @@
+name: fetch-update
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "fetch.py"
+      - "download.py"
+      - ".github/workflows/fetch-update.yml"
+  workflow_dispatch:
+  schedule:
+    - cron: "36 */3 * * 2-5"
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: chrome-installer
+  cancel-in-progress: false
+
+jobs:
+  fetch-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: python -m pip install --quiet --disable-pip-version-check requests
+
+      - name: Fetch latest versions
+        run: python fetch.py
+
+      - name: Download installers
+        if: env.updated == 'true'
+        run: python download.py --arch win_stable_x64 win_stable_arm64 mac_stable_x64
+
+      - name: Package Chrome++ with installers
+        if: env.updated == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -uo pipefail
+          FAIL=0
+          CHROME_PLUS_OK=1
+
+          if ! command -v 7z >/dev/null 2>&1; then
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq p7zip-full
+          fi
+
+          mkdir -p chrome_plus_dl chrome_plus
+          gh release download --repo Bush2021/chrome_plus \
+            --pattern 'Chrome++*.7z' --dir chrome_plus_dl --clobber 2>/dev/null || true
+          CP_FILE=$(ls chrome_plus_dl/Chrome++*.7z 2>/dev/null | head -1)
+          if [ -z "$CP_FILE" ]; then
+            echo "Warning: 未找到 Chrome++*.7z，跳过 .7z 打包（原版安装包仍会发布）"
+            CHROME_PLUS_OK=0
+          else
+            echo "Chrome++ archive: $CP_FILE"
+            if ! 7z x "$CP_FILE" -ochrome_plus -y >/dev/null; then
+              echo "Warning: Chrome++ 解压失败，跳过 .7z 打包"
+              CHROME_PLUS_OK=0
+            fi
+          fi
+
+          if [ "$CHROME_PLUS_OK" -eq 1 ] && { [ ! -d "chrome_plus/arm64" ] || [ ! -d "chrome_plus/x64" ]; }; then
+            for sub in chrome_plus/*/; do
+              [ -d "$sub" ] || continue
+              if [ -d "${sub}arm64" ] || [ -d "${sub}x64" ]; then
+                echo "检测到外层目录 ${sub}，展开架构文件夹"
+                for a in arm64 x64 x86; do
+                  if [ -d "${sub}${a}" ]; then
+                    mv "${sub}${a}" "chrome_plus/${a}"
+                  fi
+                done
+                break
+              fi
+            done
+          fi
+
+          if [ "$CHROME_PLUS_OK" -eq 1 ]; then
+            shopt -s nullglob
+            EXES=( *_*_chrome_installer_uncompressed.exe )
+            if [ ${#EXES[@]} -eq 0 ]; then
+              echo "Error: 未找到任何 *_chrome_installer_uncompressed.exe"
+              exit 1
+            fi
+
+            for EXE in "${EXES[@]}"; do
+              BASE="${EXE%_chrome_installer_uncompressed.exe}"   # arm64_157.0.8103.51
+              ARCH="${BASE%%_*}"                                  # arm64
+              VER="${BASE#*_}"                                    # 157.0.8103.51
+
+              case "$ARCH" in
+                x64|arm64) ;;
+                *) echo "跳过非目标架构：$EXE"; continue ;;
+              esac
+
+              TARGET="${ARCH}_${VER}_chrome"
+              APP_DIR="chrome_plus/${ARCH}/App"
+
+              if [ ! -d "$APP_DIR" ]; then
+                echo "Error: $APP_DIR 不存在（Chrome++ 中无 ${ARCH} 架构）"
+                FAIL=1
+                continue
+              fi
+
+              echo "=== 处理 ${ARCH}（${VER}）← ${EXE} ==="
+
+              TMP_DIR="tmp_extract_${ARCH}"
+              rm -rf "$TMP_DIR"
+              mkdir -p "$TMP_DIR"
+              if ! 7z x "$EXE" -o"$TMP_DIR" -y >/dev/null; then
+                echo "Error: 解压 $EXE 失败"
+                FAIL=1
+                rm -rf "$TMP_DIR"
+                continue
+              fi
+              echo "解压后内容："
+              ls -la "$TMP_DIR"
+
+              # 定位 Chrome-bin（兼容平铺 / 单层子目录）
+              CHROME_BIN=""
+              if [ -d "$TMP_DIR/Chrome-bin" ]; then
+                CHROME_BIN="$TMP_DIR/Chrome-bin"
+              else
+                for d in "$TMP_DIR"/*/; do
+                  [ -d "$d" ] || continue
+                  if [ -d "${d}Chrome-bin" ]; then
+                    CHROME_BIN="${d}Chrome-bin"
+                    break
+                  fi
+                done
+              fi
+
+              if [ -z "$CHROME_BIN" ]; then
+                echo "Error: 未在 $TMP_DIR 中找到 Chrome-bin"
+                ls -laR "$TMP_DIR" | head -50
+                FAIL=1
+                rm -rf "$TMP_DIR"
+                continue
+              fi
+
+              (
+                shopt -s dotglob
+                mv "$CHROME_BIN"/* "$APP_DIR/"
+              ) || { echo "Error: 移动 $CHROME_BIN 内文件到 $APP_DIR 失败"; FAIL=1; rm -rf "$TMP_DIR"; continue; }
+
+              # 重命名 chrome_plus/{arch} → {arch}_{ver}_chrome
+              rm -rf "$TARGET"
+              if ! mv "chrome_plus/${ARCH}" "$TARGET"; then
+                echo "Error: 重命名 chrome_plus/${ARCH} → $TARGET 失败"
+                FAIL=1
+                rm -rf "$TMP_DIR"
+                continue
+              fi
+
+              rm -rf "$TMP_DIR"
+
+              # 打包
+              rm -f "${TARGET}.7z"
+              if ! 7z a -t7z "${TARGET}.7z" "$TARGET" -mx=9 >/dev/null; then
+                echo "Error: 打包 ${TARGET}.7z 失败"
+                FAIL=1
+                continue
+              fi
+              echo "生成："
+              ls -la "${TARGET}.7z"
+            done
+          fi
+
+          if [ "$FAIL" -ne 0 ]; then
+            echo "Warning: 部分架构打包失败（见上方日志），已成功的架构仍会发布"
+          fi
+
+      - name: Check installer files
+        if: env.updated == 'true'
+        run: |
+          shopt -s nullglob
+          files=( *.exe *.dmg )
+          if [ ${#files[@]} -gt 0 ]; then
+            echo "installers_exist=true" >> "$GITHUB_ENV"
+          else
+            echo "installers_exist=false" >> "$GITHUB_ENV"
+          fi
+
+      - name: Commit README.md & data.json
+        if: env.installers_exist == 'true'
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add README.md data.json
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+          else
+            git commit -m "chore: auto update README.md & data.json"
+            git push origin main
+          fi
+
+      - name: Clean old releases
+        if: env.installers_exist == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for tag in $(gh release list --json tagName --jq '.[].tagName' 2>/dev/null); do
+            gh release delete "$tag" --yes --cleanup-tag || true
+          done
+
+      - name: Create latest release
+        if: env.installers_exist == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(python -c "import json;print(json.load(open('data.json'))['win_stable_x64']['version'])")
+          gh release create latest \
+            --title "Chrome ${VERSION} Stable" \
+            --notes-file README.md
+          shopt -s nullglob
+          files=( *.exe *.dmg *.7z )
+          if [ ${#files[@]} -gt 0 ]; then
+            gh release upload latest "${files[@]}" --clobber
+          fi
+
+      - name: Delete past completed runs of this workflow
+        if: ${{ always() }}
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          gh run list \
+            --repo "${{ github.repository }}" \
+            --workflow "${{ github.workflow }}" \
+            --limit 20 \
+            --json databaseId,status \
+            --jq '.[] | select(.status=="completed") | .databaseId' | while read -r run_id; do
+              if [ -z "$run_id" ]; then continue; fi
+              if [ "$run_id" = "${{ github.run_id }}" ]; then continue; fi
+              gh run delete "$run_id" --repo "${{ github.repository }}" || true
+            done
