@@ -8,11 +8,11 @@
 
 | Platform | Version | Size | Google Direct | GitHub Release Mirror | SHA-256 |
 | -------- | ------- | ---- | ------------- | --------------------- | ------- |
-| **Windows x64** | `158.0.8127.37` | 511.63 MB | [dl.google.com](https://dl.google.com/release2/chrome/ad42hbny6imw7va3w7vi2faooxba_158.0.8127.37/158.0.8127.37_chrome_installer_uncompressed.exe) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_158.0.8127.37_chrome_installer_uncompressed.exe) | <details><summary><code>e64285a90f7edb6e…</code></summary><code>e64285a90f7edb6e05b8178e6e5a0eca678a9fdd20e9f381416476829ba02a7a</code></details> |
-| **Windows ARM64** | `158.0.8127.37` | 440.92 MB | [dl.google.com](https://dl.google.com/release2/chrome/acnf45ma7wksgqr74ua6ecjqei3q_158.0.8127.37/158.0.8127.37_chrome_installer_uncompressed.exe) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/arm64_158.0.8127.37_chrome_installer_uncompressed.exe) | <details><summary><code>9f408365bb33b709…</code></summary><code>9f408365bb33b709b79fae02ba156009e05a97f25db5801fa3340b7646b1376a</code></details> |
-| **macOS x64** | `158.0.8127.37` | 275.87 MB | [dl.google.com](https://dl.google.com/release2/chrome/adjlqkdatakdaf7cb6umhxhjsp4q_158.0.8127.37/GoogleChrome-158.0.8127.37.dmg) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_GoogleChrome-158.0.8127.37.dmg) | <details><summary><code>10d1268e3019190d…</code></summary><code>10d1268e3019190d7fd20d0a7a658a33cfaa5da5351ced1b46c16b7dfa7c5223</code></details> |
-| **Windows x64 (Chrome++)** | `158.0.8127.37` | N/A | — | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_158.0.8127.37_chrome.7z) | N/A |
-| **Windows ARM64 (Chrome++)** | `158.0.8127.37` | N/A | — | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/arm64_158.0.8127.37_chrome.7z) | N/A |
+| **Windows x64** | `158.0.8127.89` | 511.64 MB | [dl.google.com](https://dl.google.com/release2/chrome/cegotz2vlsfimli3uv34l7ztzm_158.0.8127.89/158.0.8127.89_chrome_installer_uncompressed.exe) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_158.0.8127.89_chrome_installer_uncompressed.exe) | <details><summary><code>e94768730a55bfe6…</code></summary><code>e94768730a55bfe698d65899a9aa43d498a8816e7ce3b307bd9d07ac230a9371</code></details> |
+| **Windows ARM64** | `158.0.8127.89` | 440.93 MB | [dl.google.com](https://dl.google.com/release2/chrome/ads3hjcdxv4d63a4tvmbe5agceea_158.0.8127.89/158.0.8127.89_chrome_installer_uncompressed.exe) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/arm64_158.0.8127.89_chrome_installer_uncompressed.exe) | <details><summary><code>587aaf6bc0be6a2e…</code></summary><code>587aaf6bc0be6a2e481534537af43d591764b2704b2cf029a6f7535b7fa8e643</code></details> |
+| **macOS x64** | `158.0.8127.89` | 275.86 MB | [dl.google.com](https://dl.google.com/release2/chrome/adgy6ceswc76i2cvcaufmkulok6q_158.0.8127.89/GoogleChrome-158.0.8127.89.dmg) | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_GoogleChrome-158.0.8127.89.dmg) | <details><summary><code>f54426133e03ea9b…</code></summary><code>f54426133e03ea9bf8dfd2d0f9226265fba2974dddc26e8bf99cf2890de6821e</code></details> |
+| **Windows x64 (Chrome++)** | `158.0.8127.89` | N/A | — | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/x64_158.0.8127.89_chrome.7z) | N/A |
+| **Windows ARM64 (Chrome++)** | `158.0.8127.89` | N/A | — | [GitHub Release](https://v4.gh-proxy.org/https://github.com/vaesn/get-chrome-installer/releases/latest/download/arm64_158.0.8127.89_chrome.7z) | N/A |
 
 > 带 **(Chrome++)** 后缀的行为整合 [chrome_plus](https://github.com/Bush2021/chrome_plus) 的便携版 `.7z`，由本仓库工作流在版本更新时自动打包，仅随 Release 提供；`Size` / `SHA-256` 请以 Release 附件实际信息为准。
 
@@ -25,88 +25,88 @@
 
 ### Windows x64
 
-文件名：`x64_158.0.8127.37_chrome_installer_uncompressed.exe`
+文件名：`x64_158.0.8127.89_chrome_installer_uncompressed.exe`
 
 ```text
-e64285a90f7edb6e05b8178e6e5a0eca678a9fdd20e9f381416476829ba02a7a
+e94768730a55bfe698d65899a9aa43d498a8816e7ce3b307bd9d07ac230a9371
 ```
 
 PowerShell（在文件所在目录执行）：
 
 ```powershell
-Get-FileHash .\x64_158.0.8127.37_chrome_installer_uncompressed.exe -Algorithm SHA256
+Get-FileHash .\x64_158.0.8127.89_chrome_installer_uncompressed.exe -Algorithm SHA256
 ```
 
 CMD（可选）：
 
 ```bat
-certutil -hashfile x64_158.0.8127.37_chrome_installer_uncompressed.exe SHA256
+certutil -hashfile x64_158.0.8127.89_chrome_installer_uncompressed.exe SHA256
 ```
 
 ### Windows ARM64
 
-文件名：`arm64_158.0.8127.37_chrome_installer_uncompressed.exe`
+文件名：`arm64_158.0.8127.89_chrome_installer_uncompressed.exe`
 
 ```text
-9f408365bb33b709b79fae02ba156009e05a97f25db5801fa3340b7646b1376a
+587aaf6bc0be6a2e481534537af43d591764b2704b2cf029a6f7535b7fa8e643
 ```
 
 PowerShell（在文件所在目录执行）：
 
 ```powershell
-Get-FileHash .\arm64_158.0.8127.37_chrome_installer_uncompressed.exe -Algorithm SHA256
+Get-FileHash .\arm64_158.0.8127.89_chrome_installer_uncompressed.exe -Algorithm SHA256
 ```
 
 CMD（可选）：
 
 ```bat
-certutil -hashfile arm64_158.0.8127.37_chrome_installer_uncompressed.exe SHA256
+certutil -hashfile arm64_158.0.8127.89_chrome_installer_uncompressed.exe SHA256
 ```
 
 ### macOS x64
 
-文件名：`x64_GoogleChrome-158.0.8127.37.dmg`
+文件名：`x64_GoogleChrome-158.0.8127.89.dmg`
 
 ```text
-10d1268e3019190d7fd20d0a7a658a33cfaa5da5351ced1b46c16b7dfa7c5223
+f54426133e03ea9bf8dfd2d0f9226265fba2974dddc26e8bf99cf2890de6821e
 ```
 
 macOS / Linux：
 
 ```bash
-shasum -a 256 x64_GoogleChrome-158.0.8127.37.dmg
+shasum -a 256 x64_GoogleChrome-158.0.8127.89.dmg
 ```
 
 ### Windows x64 (Chrome++)
 
-文件名：`x64_158.0.8127.37_chrome.7z`（由工作流整合 [chrome_plus](https://github.com/Bush2021/chrome_plus) 自动生成，SHA-256 以 Release 附件实际下载结果为准）
+文件名：`x64_158.0.8127.89_chrome.7z`（由工作流整合 [chrome_plus](https://github.com/Bush2021/chrome_plus) 自动生成，SHA-256 以 Release 附件实际下载结果为准）
 
 PowerShell（在文件所在目录执行）：
 
 ```powershell
-Get-FileHash .\x64_158.0.8127.37_chrome.7z -Algorithm SHA256
+Get-FileHash .\x64_158.0.8127.89_chrome.7z -Algorithm SHA256
 ```
 
 CMD（可选）：
 
 ```bat
-certutil -hashfile x64_158.0.8127.37_chrome.7z SHA256
+certutil -hashfile x64_158.0.8127.89_chrome.7z SHA256
 ```
 
 ### Windows ARM64 (Chrome++)
 
-文件名：`arm64_158.0.8127.37_chrome.7z`（由工作流整合 [chrome_plus](https://github.com/Bush2021/chrome_plus) 自动生成，SHA-256 以 Release 附件实际下载结果为准）
+文件名：`arm64_158.0.8127.89_chrome.7z`（由工作流整合 [chrome_plus](https://github.com/Bush2021/chrome_plus) 自动生成，SHA-256 以 Release 附件实际下载结果为准）
 
 PowerShell（在文件所在目录执行）：
 
 ```powershell
-Get-FileHash .\arm64_158.0.8127.37_chrome.7z -Algorithm SHA256
+Get-FileHash .\arm64_158.0.8127.89_chrome.7z -Algorithm SHA256
 ```
 
 CMD（可选）：
 
 ```bat
-certutil -hashfile arm64_158.0.8127.37_chrome.7z SHA256
+certutil -hashfile arm64_158.0.8127.89_chrome.7z SHA256
 ```
 
 </details>
